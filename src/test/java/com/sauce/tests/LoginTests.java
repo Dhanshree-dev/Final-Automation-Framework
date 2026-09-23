@@ -1,9 +1,12 @@
 package com.sauce.tests;
 
+import java.util.Map;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
@@ -30,7 +33,15 @@ public class LoginTests {
 
 	@BeforeMethod
 	public void browserOpen() {
-		driver = new ChromeDriver();
+		ChromeOptions options = new ChromeOptions();
+
+		// Disable password manager and credential services
+		options.addArguments("--disable-save-password-bubble");
+		options.setExperimentalOption("prefs", Map.of(
+		    "credentials_enable_service", false,
+		    "profile.password_manager_enabled", false
+		));
+		driver = new ChromeDriver(options);
 		driver.manage().window().maximize();
 		log.info("Browser Opened up and maximized");
 		driver.get("https://www.saucedemo.com/");
